@@ -8,7 +8,8 @@
 import SwiftUI
 
 // ARCHITECTURE
-// NO ARCHITECTURE -> MV ARCHITECTURE -> MVC ARCHITECTURE
+// Vanilla SwiftUI
+// NO ARCHITECTURE(Views only) -> MV ARCHITECTURE(MV) -> MVC ARCHITECTURE(MVC)
 
 /**
  ARCHITECTURE NOTES
@@ -54,6 +55,24 @@ import SwiftUI
     - Business logic is not testable
     - Massive View Controller problem!
  */
+
+
+// 4. MVVM Architecture
+/**
+ - DataManager is shared accross the application, but access from the ViewModel
+ - ViewModels are responsible for business logic
+ - ViewModel holds the array of products
+ 
+ Pros:
+ - Seperated the View from the business logic
+ - Business logic is now testable
+ - View code is much cleaner
+ 
+ Cons:
+ - More difficult to set up and inject dependencies
+ - ViewModel lifecycle is outside of View lifecycle (cannot use SwiftUI Property Wrappers)
+ */
+
 
 @Observable
 @MainActor
