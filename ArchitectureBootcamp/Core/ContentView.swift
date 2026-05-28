@@ -7,6 +7,9 @@
 
 import SwiftUI
 
+// ARCHITECTURE
+// NO ARCHITECTURE -> MV ARCHITECTURE -> MVC ARCHITECTURE
+
 /**
  ARCHITECTURE NOTES
  
@@ -22,7 +25,21 @@ import SwiftUI
     - No speration, between View and Data layers
     - Not testable, mockable or reusable
  
- 2.
+ 
+ 2. MV Architecture (Vanilla SwiftUI)
+    - DataManager is shared across the application
+    - DataManager is responsible for business logic and data logic
+    - DataManager holds the array of products
+ 
+ Pros:
+    - Less code
+    - Easy to reuse business logic
+ 
+ Cons:
+    - Tightly coupled the business logic to the data logic
+    - "Too easy" to reuse data (other View's can affect each other)
+    - DataManager is simi-testable
+ 
  
  
  3. MVC Architecture (Vanilla SwiftUI)
