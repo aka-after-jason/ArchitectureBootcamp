@@ -15,10 +15,12 @@ struct Product: Codable, Identifiable {
     let title: String
 }
 
+// 接口
 protocol DataService {
     func getProducts() async throws -> [Product]
 }
 
+// 实现接口
 struct MockDataService: DataService {
     
     func getProducts() async throws -> [Product] {

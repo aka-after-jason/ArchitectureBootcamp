@@ -73,22 +73,6 @@ import SwiftUI
  - ViewModel lifecycle is outside of View lifecycle (cannot use SwiftUI Property Wrappers)
  */
 
-
-@Observable
-@MainActor
-class DataManager {
-    
-    private let service: DataService
-    
-    init(service: DataService) {
-        self.service = service
-    }
-    
-    func getProducts() async throws -> [Product] {
-        try await service.getProducts()
-    }
-}
-
 struct ContentView: View {
     
     @Environment(DataManager.self) private var dataManager
