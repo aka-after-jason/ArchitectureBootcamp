@@ -11,3 +11,5 @@ protocol MVVMDIViewModelInteractor {
     func getProducts() async throws -> [Product]
     func getUser() async throws -> String
 }
+
+extension CoreInteractor: MVVMDIViewModelInteractor {}

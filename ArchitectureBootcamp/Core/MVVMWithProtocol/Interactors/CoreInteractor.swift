@@ -11,7 +11,7 @@ import SwiftUI
  CoreInteractor 包括所有需要的方法
  */
 @MainActor
-struct CoreInteractor: MVVMDIViewModelInteractor, HomeViewModelInteractor {
+struct CoreInteractor {
     
     private let dataManager: DataManager
     private let userManager: UserManager

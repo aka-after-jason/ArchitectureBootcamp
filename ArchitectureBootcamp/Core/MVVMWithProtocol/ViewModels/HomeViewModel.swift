@@ -10,8 +10,8 @@ import SwiftUI
 @MainActor
 @Observable
 final class HomeViewModel {
-    let interactor: CoreInteractor
-    init(interactor: CoreInteractor) {
+    let interactor: HomeViewModelInteractor
+    init(interactor: HomeViewModelInteractor) {
         self.interactor = interactor
     }
  

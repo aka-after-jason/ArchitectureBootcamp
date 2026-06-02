@@ -11,3 +11,5 @@ protocol HomeViewModelInteractor {
     func getMovies() async throws -> [String]
     func getUser() async throws -> String
 }
+
+extension CoreInteractor: HomeViewModelInteractor {}

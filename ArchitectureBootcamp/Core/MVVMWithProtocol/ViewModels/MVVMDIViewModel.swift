@@ -10,9 +10,9 @@ import SwiftUI
 @MainActor
 @Observable
 final class MVVMDIViewModel {
-    let interactor: CoreInteractor
+    let interactor: MVVMDIViewModelInteractor
 
-    init(interactor: CoreInteractor) {
+    init(interactor: MVVMDIViewModelInteractor) {
         self.interactor = interactor
     }
 
