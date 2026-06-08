@@ -12,14 +12,53 @@ struct ExploreView: View {
         RouterView { router in
             VStack {
                 Button(action: {
-                    router.showScreen(destination: {
-                        Text("123456")
+                    router.showScreen(destination: { router in
+                        SettingsView(router: router)
                     })
                 }, label: {
                     Text("Click me")
                 })
             }
         }
+    }
+}
+
+struct SettingsView: View {
+    let router: Router
+    var body: some View {
+        VStack {
+            Text("SettingsView")
+            Button(action: {
+                router.showScreen(destination: { router in
+                    AccountView(router: router)
+                })
+            }, label: {
+                Text("Next")
+            })
+        }
+        .navigationTitle("Settings")
+    }
+}
+
+struct AccountView: View {
+    let router: Router
+    var body: some View {
+        VStack {
+            Text("AccountView")
+            Button(action: {
+                router.showScreen { router in
+                    AccountView(router: router)
+                }
+            }, label: {
+                Text("Next")
+            })
+            Button(action: {
+                router.dismissScreen()
+            }, label: {
+                Text("Dismiss")
+            })
+        }
+        .navigationTitle("Account")
     }
 }
 
