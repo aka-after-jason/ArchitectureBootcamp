@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-struct ExploreView: View {
+struct AnyDestinationTestView: View {
     var body: some View {
         RouterView { router in
             VStack {
                 Button(action: {
-                    router.showScreen(destination: { _ in
+                    router.showScreen(.sheet, destination: { _ in
                         SettingsView()
                     })
                 }, label: {
@@ -29,7 +29,7 @@ struct SettingsView: View {
         VStack {
             Text("SettingsView")
             Button(action: {
-                router.showScreen(destination: { _ in
+                router.showScreen(.push, destination: { _ in
                     AccountView()
                 })
             }, label: {
@@ -46,7 +46,7 @@ struct AccountView: View {
         VStack {
             Text("AccountView")
             Button(action: {
-                router.showScreen { _ in
+                router.showScreen(.fullScreenCover) { _ in
                     AccountView()
                 }
             }, label: {
@@ -63,5 +63,5 @@ struct AccountView: View {
 }
 
 #Preview {
-    ExploreView()
+    AnyDestinationTestView()
 }

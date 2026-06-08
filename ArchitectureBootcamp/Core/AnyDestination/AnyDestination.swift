@@ -8,13 +8,12 @@ import SwiftUI
 
 // 使用 枚举的方式是列出所有的 destination
 /*
-enum NavigationDestinationOption: Hashable {
-    case integerScreen(int: Int)
-    case stringScreen(string: String)
-    case someOtherScreen(bool: Bool)
-}
- */
-
+ enum NavigationDestinationOption: Hashable {
+     case integerScreen(int: Int)
+     case stringScreen(string: String)
+     case someOtherScreen(bool: Bool)
+ }
+  */
 
 /// 这种方式更加灵活, 推荐使用
 struct AnyDestination: Hashable {
@@ -25,9 +24,11 @@ struct AnyDestination: Hashable {
     init<T: View>(destination: T) {
         self.destination = AnyView(destination)
     }
+
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
+
     static func == (lhs: AnyDestination, rhs: AnyDestination) -> Bool {
         lhs.hashValue == rhs.hashValue
     }
@@ -41,13 +42,13 @@ extension EnvironmentValues {
 
 protocol Router {
     /// 接收一个 ViewBuilder 的参数, 类型是一个泛型函数
-    func showScreen<T: View>(@ViewBuilder destination: @escaping (Router) -> T)
+    func showScreen<T: View>(_ option: SegueOption, @ViewBuilder destination: @escaping (Router) -> T)
     func dismissScreen()
 }
 
 /// 用作默认值
 struct MockRouter: Router {
-    func showScreen<T>(destination: @escaping (any Router) -> T) where T : View {
+    func showScreen<T: View>(_ option: SegueOption, @ViewBuilder destination _: @escaping (Router) -> T) {
         print("Mock router does not work.")
     }
     
@@ -65,12 +66,14 @@ struct MockRouter: Router {
         
  */
 struct RouterView<Content: View>: View, Router {
-    
     @Environment(\.dismiss) private var dismiss
     
     @State private var path: [AnyDestination] = []
     
-    // Binding to the view stack from previous RouterView
+    @State private var showSheet: AnyDestination? = nil
+    @State private var showFullScreenCover: AnyDestination? = nil
+    
+    /// Binding to the view stack from previous RouterView
     @Binding var screenStack: [AnyDestination]
     
     var addNavigationView: Bool // 标识
@@ -78,7 +81,7 @@ struct RouterView<Content: View>: View, Router {
     @ViewBuilder var content: (Router) -> Content
     
     init(
-        screenStack: (Binding<[AnyDestination]>)? = nil,
+        screenStack: Binding<[AnyDestination]>? = nil,
         addNavigationView: Bool = true,
         content: @escaping (Router) -> Content
     ) {
@@ -92,6 +95,8 @@ struct RouterView<Content: View>: View, Router {
         // 关键代码
         NavigationStackIfNeeded(path: $path, addNavigationView: addNavigationView) {
             content(self) // 统一管理, 添加 modifier 的话不再需要添加两遍
+                .sheetViewModifier(screen: $showSheet)
+                .fullScreenCoverViewModifier(screen: $showFullScreenCover)
         }
         .environment(\.router, self) // 将 router 放入环境
     }
@@ -99,25 +104,33 @@ struct RouterView<Content: View>: View, Router {
     /// 每次创建新screen的时候, 创建一个新的 RouterView 和 新的 @Environment(\.dismiss)
     /// 因为 @Environment(\.dismiss) 是在 RouterView 里面的
     /// 哪个页面需要 dismiss, 哪个页面就需要 @Environment(\.dismiss) 这个
-    func showScreen<T: View>(@ViewBuilder destination: @escaping (Router) -> T) {
+    func showScreen<T: View>(_ option: SegueOption, @ViewBuilder destination: @escaping (Router) -> T) {
         // 关键代码
         // 创建新的 RouterView
         let newScreen = RouterView<T>(
             // screenStack 为空表示 first RouterView, 使用 $path, 否则 使用 $screenStack
             screenStack: screenStack.isEmpty ? $path : $screenStack,
-            addNavigationView: false
+            addNavigationView: option.shouldAddNewNavigationView
         ) { newRouter in
             destination(newRouter) // 返回 router
         }
         
         let destination = AnyDestination(destination: newScreen)
         
-        if screenStack.isEmpty {
-            // this means we are in the first RouterView
-            path.append(destination)
-        } else {
-            // this means we are in the secondary RouterView
-            screenStack.append(destination)
+        switch option {
+        case .push:
+            if screenStack.isEmpty {
+                // this means we are in the first RouterView
+                path.append(destination)
+            } else {
+                // this means we are in the secondary RouterView
+                screenStack.append(destination)
+            }
+
+        case .sheet:
+            showSheet = destination
+        case .fullScreenCover:
+            showFullScreenCover = destination
         }
     }
     
@@ -141,5 +154,44 @@ struct NavigationStackIfNeeded<Content: View>: View {
         } else {
             content
         }
+    }
+}
+
+enum SegueOption {
+    case push, sheet, fullScreenCover
+    
+    var shouldAddNewNavigationView: Bool {
+        switch self {
+        case .push:
+            return false
+        case .sheet, .fullScreenCover:
+            return true
+        }
+    }
+}
+
+extension View {
+    // sheet
+    func sheetViewModifier(screen: Binding<AnyDestination?>) -> some View {
+        self
+            .sheet(isPresented: Binding(ifNotNil: screen)) {
+                ZStack {
+                    if let screen = screen.wrappedValue {
+                        screen.destination
+                    }
+                }
+            }
+    }
+    
+    // fullScreenCover
+    func fullScreenCoverViewModifier(screen: Binding<AnyDestination?>) -> some View {
+        self
+            .fullScreenCover(isPresented: Binding(ifNotNil: screen)) {
+                ZStack {
+                    if let screen = screen.wrappedValue {
+                        screen.destination
+                    }
+                }
+            }
     }
 }
