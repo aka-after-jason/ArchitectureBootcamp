@@ -33,10 +33,27 @@ struct AnyDestination: Hashable {
     }
 }
 
+/// 将 Router 放入到 环境当中
+/// 使用: @Environment(\.router) private var router
+extension EnvironmentValues {
+    @Entry var router: Router = MockRouter()
+}
+
 protocol Router {
     /// 接收一个 ViewBuilder 的参数, 类型是一个泛型函数
     func showScreen<T: View>(@ViewBuilder destination: @escaping (Router) -> T)
     func dismissScreen()
+}
+
+/// 用作默认值
+struct MockRouter: Router {
+    func showScreen<T>(destination: @escaping (any Router) -> T) where T : View {
+        print("Mock router does not work.")
+    }
+    
+    func dismissScreen() {
+        print("Mock router does not work.")
+    }
 }
 
 /**
@@ -76,6 +93,7 @@ struct RouterView<Content: View>: View, Router {
         NavigationStackIfNeeded(path: $path, addNavigationView: addNavigationView) {
             content(self) // 统一管理, 添加 modifier 的话不再需要添加两遍
         }
+        .environment(\.router, self) // 将 router 放入环境
     }
     
     /// 每次创建新screen的时候, 创建一个新的 RouterView 和 新的 @Environment(\.dismiss)

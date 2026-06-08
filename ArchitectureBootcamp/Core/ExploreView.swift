@@ -12,8 +12,8 @@ struct ExploreView: View {
         RouterView { router in
             VStack {
                 Button(action: {
-                    router.showScreen(destination: { router in
-                        SettingsView(router: router)
+                    router.showScreen(destination: { _ in
+                        SettingsView()
                     })
                 }, label: {
                     Text("Click me")
@@ -24,13 +24,13 @@ struct ExploreView: View {
 }
 
 struct SettingsView: View {
-    let router: Router
+    @Environment(\.router) private var router
     var body: some View {
         VStack {
             Text("SettingsView")
             Button(action: {
-                router.showScreen(destination: { router in
-                    AccountView(router: router)
+                router.showScreen(destination: { _ in
+                    AccountView()
                 })
             }, label: {
                 Text("Next")
@@ -41,13 +41,13 @@ struct SettingsView: View {
 }
 
 struct AccountView: View {
-    let router: Router
+    @Environment(\.router) private var router
     var body: some View {
         VStack {
             Text("AccountView")
             Button(action: {
-                router.showScreen { router in
-                    AccountView(router: router)
+                router.showScreen { _ in
+                    AccountView()
                 }
             }, label: {
                 Text("Next")
