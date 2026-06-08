@@ -54,11 +54,9 @@ import SwiftUI
  Cons:
     - Business logic is not testable
     - Massive View Controller problem!
- */
-
-
-// 4. MVVM Architecture
-/**
+ 
+ 
+ 4. MVVM Architecture
  - DataManager is shared accross the application, but access from the ViewModel
  - ViewModels are responsible for business logic
  - ViewModel holds the array of products
@@ -71,7 +69,44 @@ import SwiftUI
  Cons:
  - More difficult to set up and inject dependencies
  - ViewModel lifecycle is outside of View lifecycle (cannot use SwiftUI Property Wrappers)
+ 
+ 
+ 5. MVVM Architecture + DI Container
+ Pros:
+ - Same as MVVM above, but much easier to manage dependencies
+ 
+ Cons:
+ - Adds abstraction to the dependencies (ie: app will crash if dependency is not there)
+ 
+ 
+ 6. MVVM Architecture + Protocols (Interactors)
+ Pros:
+ - Same as MVVM above, but full decouples the dependencies from ViewModel
+ - Easier to test!
+ 
+ Cons:
+ - More work to set up and maintain
+ 
+ 
+ 7. MVVM Architecture + Protocols + Shared Conformance (CoreInteractor)
+ Pros:
+ - Same as #5 above, but easier set up and maintain
+ 
+ Cons:
+ - Single large interactor per module
+ 
+ 8. MVVM Architecture + Protocols + Shared Conformance + Builder (CoreBuilder)
+ Pros:
+ - Same as #6 above
+ - Decoupled routing destinations between views
+ 
+ Cons:
+ - More work to set up and maintain
+ 
+ 
+ 
  */
+
 
 struct ContentView: View {
     
