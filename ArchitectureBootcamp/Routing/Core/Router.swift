@@ -20,6 +20,9 @@ protocol Router {
     
     func showAlert(type: AlertType, title: String, subtitle: String?, buttons: (() -> AnyView)?)
     func dismissAlert()
+    
+    func showModal<T: View>(backgroundColor: Color,transition: AnyTransition,@ViewBuilder destination: @escaping () -> T)
+    func dismissModal()
 }
 
 /// 用作默认值
@@ -37,6 +40,14 @@ struct MockRouter: Router {
     }
     
     func dismissAlert() {
+        print("Mock router does not work.")
+    }
+    
+    func showModal<T: View>(backgroundColor: Color,transition: AnyTransition,@ViewBuilder destination: @escaping () -> T) {
+        print("Mock router does not work.")
+    }
+    
+    func dismissModal() {
         print("Mock router does not work.")
     }
 }

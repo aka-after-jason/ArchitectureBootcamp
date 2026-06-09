@@ -13,8 +13,40 @@ struct AnyDestinationTestView: View {
         List {
             segueSection
             alertSection
+            modalSection
         }
         .navigationTitle("Routing example")
+    }
+    
+    private var modalSection: some View {
+        Section(
+            content: {
+                Button(
+                    action: {
+                        router.showModal(
+                            backgroundColor: Color.red.opacity(0.4),
+                            transition: .move(edge: .top),
+                            destination: {
+                                RoundedRectangle(cornerRadius: 30)
+                                    .fill(Color.blue)
+                                    .frame(width: 250, height: 400)
+                                    .onTapGesture {
+                                        router.dismissModal()
+                                    }
+                            })
+                    },
+                    label: {
+                        Text("ShowModal")
+                    })
+                Button(action: {
+                    router.dismissModal()
+                }, label: {
+                    Text("Dismiss Modal")
+                })
+            },
+            header: {
+            Text("Modal")
+        })
     }
     
     private var alertSection: some View {
