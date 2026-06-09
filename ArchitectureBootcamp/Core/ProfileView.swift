@@ -35,7 +35,7 @@ struct ProfileView: View {
                 })
                 
                 Button(action: {
-                    gotoMVVMDIView()
+                    // gotoMVVMDIView()
                 }, label: {
                     Text("Go to ContentView")
                 })
@@ -58,14 +58,14 @@ struct ProfileView: View {
         }
     }
     
-    func gotoMVVMDIView() {
-        let container = DependencyContainer()
-        container.regiser(DataManager.self, manager: DataManager(service: MockDataService()))
-        container.regiser(UserManager.self, manager: UserManager())
-        path.append(AnyDestination(
-            destination: MVVMDIView(viewModel: MVVMDIViewModel(interactor: CoreInteractor(container: container)))
-        ))
-    }
+//    func gotoMVVMDIView() {
+//        let container = DependencyContainer()
+//        container.regiser(DataManager.self, manager: DataManager(service: MockDataService()))
+//        container.regiser(UserManager.self, manager: UserManager())
+//        path.append(AnyDestination(
+//            destination: MVVMDIView(viewModel: MVVMDIViewModel(interactor: CoreInteractor(container: container)))
+//        ))
+//    }
 }
 
 #Preview {

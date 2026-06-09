@@ -9,23 +9,29 @@ import SwiftUI
 
 // MARK: MVVM with Protocols
 
+// MARK: VIPER (View, Interactor, Presenter(vm), Entity, Router)
+
 struct MVVMDIView: View {
-    @State var viewModel: MVVMDIViewModel
+    @State var presenter: MVVMDIPresenter
     var body: some View {
         ScrollView {
             VStack {
-                ForEach(viewModel.products) { product in
+                ForEach(presenter.products) { product in
                     Text(product.title)
+                        .onTapGesture {
+                            presenter.onProductPressed(product: product)
+                        }
                 }
             }
             .task {
                 do {
-                    try await viewModel.getProducts()
+                    try await presenter.getProducts()
                 } catch {
                     print("error with loading products: \(error)")
                 }
             }
         }
+        .navigationTitle("Product")
     }
 }
 
@@ -34,5 +40,12 @@ struct MVVMDIView: View {
     container.regiser(UserManager.self, manager: UserManager())
     container.regiser(DataManager.self, manager: DataManager(service: MockDataService()))
     
-    return MVVMDIView(viewModel: MVVMDIViewModel(interactor: CoreInteractor(container: container)))
+    return RouterView { router in
+        MVVMDIView(
+            presenter: MVVMDIPresenter(
+                interactor: CoreInteractor(container: container),
+                router: CoreRouter(router: router)
+            )
+        )
+    }
 }

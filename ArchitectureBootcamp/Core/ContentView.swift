@@ -104,6 +104,13 @@ import SwiftUI
  - More work to set up and maintain
  
  
+ 9. VIPER: (View, Interactor, Presenter, Entity, Router)
+ Pros:
+ - Same as #8 above
+ - Decoupled routing from views
+ 
+ Cons:
+ - More work to set up and maintain
  
  */
 
