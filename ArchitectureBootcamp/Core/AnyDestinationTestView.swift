@@ -8,18 +8,77 @@
 import SwiftUI
 
 struct AnyDestinationTestView: View {
+    @Environment(\.router) private var router
     var body: some View {
-        RouterView { router in
-            VStack {
-                Button(action: {
-                    router.showScreen(.sheet, destination: { _ in
-                        SettingsView()
-                    })
-                }, label: {
-                    Text("Click me")
-                })
-            }
+        List {
+            segueSection
+            alertSection
         }
+        .navigationTitle("Routing example")
+    }
+    
+    private var alertSection: some View {
+        Section(content: {
+            Button(action: {
+                router.showAlert(type: .alert, title: "Title", subtitle: "Subtitle", buttons: nil)
+            }, label: {
+                Text("Alert")
+            })
+            Button(action: {
+                router.showAlert(type: .confirmationDialog, title: "Title", subtitle: "subtitle", buttons: {
+                    AnyView(
+                        Group {
+                            Button("Alpha") {}
+                            Button("Beta") {}
+                            Button("Gamma") {}
+                            Button("Delta") {}
+                        }
+                    )
+                })
+            }, label: {
+                Text("ConfirmationDialog")
+            })
+            Button(action: {
+                router.dismissAlert()
+            }, label: {
+                Text("Dismiss Alert")
+            })
+        }, header: {
+            Text("Alerts")
+        })
+    }
+    
+    private var segueSection: some View {
+        Section(content: {
+            Button(action: {
+                router.showScreen(.push) { _ in
+                    AnyDestinationTestView()
+                }
+            }, label: {
+                Text("push")
+            })
+            Button(action: {
+                router.showScreen(.sheet) { _ in
+                    AnyDestinationTestView()
+                }
+            }, label: {
+                Text("sheet")
+            })
+            Button(action: {
+                router.showScreen(.fullScreenCover) { _ in
+                    AnyDestinationTestView()
+                }
+            }, label: {
+                Text("full screen cover")
+            })
+            Button(action: {
+                router.dismissScreen()
+            }, label: {
+                Text("dismiss")
+            })
+        }, header: {
+            Text("Segues")
+        })
     }
 }
 
@@ -63,5 +122,7 @@ struct AccountView: View {
 }
 
 #Preview {
-    AnyDestinationTestView()
+    RouterView { _ in
+        AnyDestinationTestView()
+    }
 }
